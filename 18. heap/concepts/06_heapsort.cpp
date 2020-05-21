@@ -1,24 +1,28 @@
 #include <iostream>
-#include <cstdio>
 #include <vector>
 
 using namespace std;
 
-void heapify(vector <int> &heap, int id){
-    if (id == 0){
+void downheapify_virtual(vector <int> &heap, int id, int heapsize){
+    int leftid = 2 * id + 1;
+    int rightid = 2 * id + 2;
+    if (leftid >= heapsize and rightid >= heapsize){
         return;
     }
-    int parent_id = (id - 1) / 2;
-    if (heap[parent_id] < heap[id]){
-        //swap
-        int temp = heap[parent_id];
-        heap[parent_id] = heap[id];
-        heap[id] = temp;
-        heapify(heap, parent_id);
+
+    int largestid = id;
+    if (leftid < heapsize and heap[leftid] > heap[largestid]){
+        largestid = leftid;
     }
-    else{
+    if (rightid < heapsize and heap[rightid] > heap[largestid]){
+        largestid = rightid;
+    }
+
+    if (largestid == id){
         return;
     }
+    swap(heap[id], heap[largestid]);
+    downheapify_virtual(heap, largestid, heapsize);
 }
 
 void downheapify(vector <int> &heap, int id){
@@ -49,6 +53,16 @@ void builheapoptimised(vector <int> &heap){
     }
 }
 
+void heapsort(vector <int> &heap){
+    int heap_size = heap.size();
+    builheapoptimised(heap);
+    for (int i =  heap.size()-1; i >= 0; i--){
+        swap(heap[0], heap[i]);
+        heap_size -= 1;
+        downheapify_virtual(heap, 0, heap_size);
+    }
+}
+
 void display(vector <int> &heap){
     for (int i=0; i<heap.size(); i++){
         cout << heap[i] << " ";
@@ -65,7 +79,7 @@ int main(){
         cin >> x;
         heap.push_back(x);
     }
-    builheapoptimised(heap);
+    heapsort(heap);
     display(heap);    
     return 0;
 }
