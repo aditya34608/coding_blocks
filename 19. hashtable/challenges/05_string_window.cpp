@@ -29,3 +29,69 @@ Explanation
 The substring "qazxs" is the shortest substring of s1 that contains all the characters of s2.
 
 */
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+int main()
+{
+    string s, pat;
+    getline(cin, s);
+    // cin>>pat;
+    getline(cin, pat);
+    unordered_map<char, ll> pattern, str;
+
+    ll i, n1, n2;
+    n1 = pat.length();
+
+    for (i = 0; i < n1; i++)
+    {
+        pattern[pat[i]]++;
+    }
+
+    n2 = s.length();
+    ll c = 0, m_len = INT_MAX, astr, aend = -1;
+    ll start = 0;
+    for (i = 0; i < n2; i++)
+    {
+
+        str[s[i]]++;
+        if (str[s[i]] <= pattern[s[i]])
+        {
+            c++;
+        }
+
+        if (c == n1)
+        {
+            while ((str[s[start]] > pattern[s[start]]))
+            {
+
+                str[s[start]]--;
+                start++;
+            }
+
+            ll len = i - start + 1;
+            //  cout<<len<<endl;
+            if (len < m_len)
+            {
+                m_len = len;
+                astr = start;
+                aend = i;
+                // cout<<astr<<" "<<aend<<endl;
+            }
+        }
+    }
+
+    if (aend == -1)
+    {
+        cout << "No String" << endl;
+    }
+    else
+    {
+        for (i = astr; i <= aend; i++)
+        {
+            cout << s[i];
+        }
+        cout << endl;
+    }
+    return 0;
+}
